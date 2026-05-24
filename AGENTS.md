@@ -10,3 +10,7 @@ This repository is a static Binary Translator web app.
 - `manifest.json` defines PWA metadata and icon references.
 - `icon.svg` is the app icon.
 
+
+
+IGNORE the folder "icon". do not open it for any reason!
+
