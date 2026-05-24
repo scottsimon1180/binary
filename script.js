@@ -10,6 +10,11 @@
     encoding: 'utf8',
     tapPreview: true,
   };
+  const VALID_SETTING_VALUES = {
+    theme: new Set(['light', 'dark', 'auto']),
+    separator: new Set(['space', 'comma', 'none', 'custom']),
+    encoding: new Set(['utf8', 'ascii']),
+  };
 
   const State = {
     mode: 'tToB',   // 'tToB' or 'bToT'
@@ -20,14 +25,37 @@
   function loadSettings() {
     try {
       const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      const settings = { ...DEFAULTS, ...s };
-      if (settings.separator === 'dash') settings.separator = 'none';
-      return settings;
+      return normalizeSettings({ ...DEFAULTS, ...s });
     } catch { return { ...DEFAULTS }; }
   }
 
   function saveSettings() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(State.settings)); } catch {}
+  }
+
+  function normalizeSettings(settings) {
+    const normalized = { ...DEFAULTS, ...settings };
+    if (normalized.separator === 'dash') normalized.separator = 'none';
+
+    if (!VALID_SETTING_VALUES.theme.has(normalized.theme)) {
+      normalized.theme = DEFAULTS.theme;
+    }
+    if (!VALID_SETTING_VALUES.separator.has(normalized.separator)) {
+      normalized.separator = DEFAULTS.separator;
+    }
+    if (!VALID_SETTING_VALUES.encoding.has(normalized.encoding)) {
+      normalized.encoding = DEFAULTS.encoding;
+    }
+    if (typeof normalized.customSeparator !== 'string') {
+      normalized.customSeparator = DEFAULTS.customSeparator;
+    } else {
+      normalized.customSeparator = normalized.customSeparator.slice(0, 3);
+    }
+    if (typeof normalized.tapPreview !== 'boolean') {
+      normalized.tapPreview = DEFAULTS.tapPreview;
+    }
+
+    return normalized;
   }
 
   // ---------- DOM ----------
@@ -130,6 +158,7 @@
     const chunks = bits.match(/.{1,8}/g) || [];
     const offsetByBitIndex = [0];
     const bitIndexByOffset = [0];
+    const bitIndexByCharOffset = [];
     let text = '';
     let bitIndex = 0;
 
@@ -142,6 +171,7 @@
       }
 
       for (const bit of chunk) {
+        bitIndexByCharOffset[text.length] = bitIndex;
         text += bit;
         bitIndex += 1;
         bitIndexByOffset[text.length] = bitIndex;
@@ -149,7 +179,7 @@
       }
     });
 
-    return { text, offsetByBitIndex, bitIndexByOffset };
+    return { text, offsetByBitIndex, bitIndexByOffset, bitIndexByCharOffset };
   }
 
   function renderBinary(options = {}) {
@@ -199,19 +229,27 @@
     selection.addRange(range);
   }
 
-  function focusTextAtPoint(x, y) {
-    textInput.focus({ preventScroll: true });
-
-    let range = null;
+  function getCaretRangeFromPoint(x, y) {
     if (document.caretPositionFromPoint) {
       const position = document.caretPositionFromPoint(x, y);
       if (position) {
-        range = document.createRange();
+        const range = document.createRange();
         range.setStart(position.offsetNode, position.offset);
+        return range;
       }
-    } else if (document.caretRangeFromPoint) {
-      range = document.caretRangeFromPoint(x, y);
     }
+
+    if (document.caretRangeFromPoint) {
+      return document.caretRangeFromPoint(x, y);
+    }
+
+    return null;
+  }
+
+  function focusTextAtPoint(x, y) {
+    textInput.focus({ preventScroll: true });
+
+    const range = getCaretRangeFromPoint(x, y);
 
     if (!range || !textInput.contains(range.startContainer)) {
       placeCaretAtEnd(textInput);
@@ -237,6 +275,12 @@
       return el.textContent.length;
     }
     return range.toString().length;
+  }
+
+  function getDisplayOffsetAtPoint(x, y) {
+    const range = getCaretRangeFromPoint(x, y);
+    if (!range || !binInput.contains(range.startContainer)) return null;
+    return getTextOffsetWithin(binInput, range.startContainer, range.startOffset);
   }
 
   function clampBitIndex(index) {
@@ -312,24 +356,28 @@
   function focusBinaryAtPoint(x, y) {
     focusBinaryInput();
 
-    let range = null;
-    if (document.caretPositionFromPoint) {
-      const position = document.caretPositionFromPoint(x, y);
-      if (position) {
-        range = document.createRange();
-        range.setStart(position.offsetNode, position.offset);
-      }
-    } else if (document.caretRangeFromPoint) {
-      range = document.caretRangeFromPoint(x, y);
-    }
-
-    if (!range || !binInput.contains(range.startContainer)) {
+    const displayOffset = getDisplayOffsetAtPoint(x, y);
+    if (displayOffset === null) {
       setBinarySelectionByBitRange(State.bits.length);
       return;
     }
 
-    const displayOffset = getTextOffsetWithin(binInput, range.startContainer, range.startOffset);
     setBinarySelectionByBitRange(bitIndexFromDisplayOffset(displayOffset));
+  }
+
+  function getByteBitsAtDisplayOffset(displayOffset) {
+    const data = getBinaryDisplayData();
+    const offset = Math.max(0, Math.min(data.text.length, displayOffset));
+    let bitIndex = data.bitIndexByCharOffset[offset];
+
+    if (typeof bitIndex !== 'number') {
+      bitIndex = data.bitIndexByCharOffset[offset - 1];
+    }
+    if (typeof bitIndex !== 'number') return '';
+
+    const byteStart = Math.floor(clampBitIndex(bitIndex) / 8) * 8;
+    const byte = State.bits.slice(byteStart, byteStart + 8);
+    return byte.length === 8 ? byte : '';
   }
 
   // ---------- Mode handling ----------
@@ -767,10 +815,10 @@
       return;
     }
     if (!State.settings.tapPreview) return;
-    const span = e.target.closest('.byte');
-    if (!span || span.classList.contains('partial')) return;
-    const bits = span.textContent;
-    if (bits.length !== 8) return;
+    const displayOffset = getDisplayOffsetAtPoint(e.clientX, e.clientY);
+    if (displayOffset === null) return;
+    const bits = getByteBitsAtDisplayOffset(displayOffset);
+    if (!bits) return;
     showBytePreview(bits);
   });
 
