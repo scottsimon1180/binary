@@ -4,7 +4,7 @@
   // ---------- Defaults & state ----------
   const STORAGE_KEY = 'binary-translator-v1';
   const DEFAULTS = {
-    theme: 'light',
+    theme: 'dark',
     separator: 'space',
     customSeparator: '\u00b7',
     encoding: 'utf8',
