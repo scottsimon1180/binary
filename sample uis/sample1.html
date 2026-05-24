@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Style 01 — Cyberpunk Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #000;
+  --bg-2: #050505;
+  --bg-3: #0a0a0a;
+  --border: rgba(0, 255, 157, 0.14);
+  --border-2: rgba(0, 255, 157, 0.35);
+  --dim: #1f4a37;
+  --mid: #0a8c5f;
+  --text: #00ff9d;
+  --bright: #7fffc4;
+  --accent: #ff0080;
+  --warn: #ffb000;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: #050505;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  color: var(--text);
+  min-height: 100vh;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-feature-settings: "ss01", "ss02", "ss03";
+}
+
+/* Style label (desktop preview only) */
+.style-tag {
+  position: fixed;
+  top: 24px; left: 24px;
+  background: #000;
+  color: var(--text);
+  padding: 10px 16px;
+  font: 500 11px/1 'IBM Plex Mono', monospace;
+  letter-spacing: 0.18em;
+  border: 1px solid var(--border-2);
+  text-shadow: 0 0 8px rgba(0, 255, 157, 0.5);
+  z-index: 1000;
+}
+.style-tag span { color: var(--accent); }
+@media (max-width: 500px) { .style-tag { display: none; } }
+
+.phone {
+  width: 390px;
+  height: 844px;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px var(--border-2),
+    0 30px 90px rgba(0, 255, 157, 0.08),
+    0 0 120px rgba(255, 0, 128, 0.05);
+}
+@media (max-width: 500px) {
+  .phone { width: 100vw; height: 100vh; box-shadow: none; }
+}
+
+/* Scanlines */
+.phone::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(0, 255, 157, 0.025) 3px,
+    rgba(0, 255, 157, 0.025) 3px
+  );
+  pointer-events: none;
+  z-index: 50;
+  mix-blend-mode: overlay;
+}
+/* Subtle grid */
+.phone::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 157, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 157, 0.025) 1px, transparent 1px);
+  background-size: 26px 26px;
+  pointer-events: none;
+  z-index: 1;
+  mask-image: radial-gradient(ellipse at center, black 50%, transparent 85%);
+}
+
+.app {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 44px;
+}
+
+/* HEADER */
+.header {
+  padding: 12px 20px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.brand {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-shadow: 0 0 12px rgba(0, 255, 157, 0.4);
+}
+.brand .glyph {
+  color: var(--accent);
+  font-size: 14px;
+  text-shadow: 0 0 8px var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+.brand .sub { color: var(--dim); font-weight: 400; margin-left: 2px; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.settings-btn {
+  background: var(--bg);
+  border: 1px solid var(--border-2);
+  color: var(--text);
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: all .15s;
+  position: relative;
+}
+.settings-btn::before, .settings-btn::after {
+  content: '';
+  position: absolute;
+  width: 6px; height: 6px;
+  border: 1px solid var(--text);
+}
+.settings-btn::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.settings-btn::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+.settings-btn:active { background: var(--text); color: var(--bg); }
+.settings-btn svg { width: 14px; height: 14px; }
+
+/* STATUS BAR */
+.statusbar {
+  padding: 7px 20px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  display: flex;
+  justify-content: space-between;
+  color: var(--mid);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(0, 255, 157, 0.03), transparent);
+}
+.statusbar .l { display: flex; align-items: center; gap: 10px; }
+.dot {
+  width: 6px; height: 6px;
+  background: var(--text);
+  box-shadow: 0 0 8px var(--text);
+  animation: blink 1.4s infinite;
+}
+@keyframes blink {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.2; }
+}
+.statusbar .r { display: flex; gap: 14px; }
+.statusbar .r span::before { content: '['; color: var(--dim); }
+.statusbar .r span::after { content: ']'; color: var(--dim); }
+
+/* PANELS */
+.panel {
+  flex: 1;
+  padding: 12px 20px 8px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  transition: background .25s;
+}
+.panel.active {
+  background:
+    radial-gradient(ellipse at top, rgba(0, 255, 157, 0.04), transparent 60%),
+    radial-gradient(ellipse at center, rgba(0, 255, 157, 0.02), transparent 70%);
+}
+.panel.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--text);
+  box-shadow: 0 0 12px var(--text);
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.tag {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--mid);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+.panel.active .tag { color: var(--bright); text-shadow: 0 0 8px rgba(0, 255, 157, 0.5); }
+.tag .arrow { color: var(--accent); text-shadow: 0 0 6px var(--accent); }
+.tag .role {
+  padding: 2px 6px;
+  border: 1px solid currentColor;
+  font-size: 8px;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
+.tools { display: flex; gap: 6px; }
+.tool {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--mid);
+  width: 28px; height: 28px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: all .12s;
+}
+.tool:active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.tool svg { width: 12px; height: 12px; display: block; }
+
+.content {
+  flex: 1;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--text);
+  overflow-y: auto;
+  word-break: break-all;
+  outline: none;
+  caret-color: var(--accent);
+  padding: 4px 0 6px;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 10px rgba(0, 255, 157, 0.35);
+  scrollbar-width: none;
+}
+.content::-webkit-scrollbar { width: 0; display: none; }
+.content:empty::before {
+  content: attr(data-placeholder);
+  color: var(--dim);
+  opacity: 0.6;
+  letter-spacing: 0.04em;
+}
+#binInput {
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  color: var(--bright);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  padding-top: 6px;
+  border-top: 1px dashed var(--border);
+}
+
+/* SWAP */
+.swap-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  position: relative;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.swap-line {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  width: calc(50% - 38px);
+  background: linear-gradient(90deg, transparent, var(--border-2));
+}
+.swap-line.l { left: 0; }
+.swap-line.r { right: 0; background: linear-gradient(-90deg, transparent, var(--border-2)); }
+.swap {
+  background: var(--bg);
+  border: 1px solid var(--text);
+  color: var(--text);
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 24px rgba(0, 255, 157, 0.4), inset 0 0 12px rgba(0, 255, 157, 0.06);
+  transition: transform .35s cubic-bezier(.5, 1.5, .4, 1);
+  font-family: inherit;
+}
+.swap:active { transform: rotate(180deg); }
+.swap svg { width: 22px; height: 22px; }
+
+/* KEYBOARD */
+.kbd {
+  background:
+    linear-gradient(180deg, var(--bg-3) 0%, var(--bg) 100%);
+  padding: 14px 12px 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  border-top: 1px solid var(--border-2);
+  position: relative;
+}
+.kbd::before {
+  content: 'INPUT://BINARY';
+  position: absolute;
+  top: 4px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  color: var(--dim);
+  letter-spacing: 0.2em;
+}
+.key {
+  background: linear-gradient(180deg, #0c0c0c 0%, #050505 100%);
+  border: 1px solid var(--border-2);
+  color: var(--text);
+  font: 500 30px/1 'IBM Plex Mono', monospace;
+  cursor: pointer;
+  position: relative;
+  height: 64px;
+  display: grid; place-items: center;
+  text-shadow: 0 0 14px rgba(0, 255, 157, 0.6);
+  transition: all .08s;
+  overflow: hidden;
+}
+.key::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(0, 255, 157, 0.15), transparent 65%);
+  pointer-events: none;
+}
+.key::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid transparent;
+  pointer-events: none;
+}
+.key:active {
+  background: var(--text);
+  color: var(--bg);
+  text-shadow: none;
+  border-color: var(--bright);
+  box-shadow: 0 0 40px rgba(0, 255, 157, 0.7), inset 0 0 16px rgba(0, 0, 0, 0.4);
+}
+.key .lbl {
+  position: absolute;
+  bottom: 6px; right: 8px;
+  font-size: 8px;
+  color: var(--dim);
+  letter-spacing: 0.15em;
+  font-weight: 400;
+  text-shadow: none;
+}
+.key:active .lbl { color: rgba(0, 0, 0, 0.5); }
+.key-back svg { width: 26px; height: 26px; }
+.key.inactive { opacity: 0.35; pointer-events: none; }
+
+/* Corner brackets on phone frame */
+.corners > div {
+  position: absolute;
+  width: 16px; height: 16px;
+  border: 1px solid var(--accent);
+  z-index: 30;
+  pointer-events: none;
+}
+.corners .c1 { top: 50px; left: 6px; border-right: 0; border-bottom: 0; }
+.corners .c2 { top: 50px; right: 6px; border-left: 0; border-bottom: 0; }
+.corners .c3 { bottom: 6px; left: 6px; border-right: 0; border-top: 0; }
+.corners .c4 { bottom: 6px; right: 6px; border-left: 0; border-top: 0; }
+
+/* Selection */
+::selection { background: var(--accent); color: var(--bg); }
+</style>
+</head>
+<body>
+<div class="style-tag">STYLE <span>01</span> // CYBERPUNK TERMINAL</div>
+
+<div class="phone">
+  <div class="corners"><div class="c1"></div><div class="c2"></div><div class="c3"></div><div class="c4"></div></div>
+
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <span class="glyph">◢</span>
+        BIN://TRANSLATOR<span class="sub">.v1</span>
+      </div>
+      <button class="settings-btn" aria-label="Settings">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.953 20.961" fill="currentColor"><g><path d="M9.53125 20.9609L11.4219 20.9609C11.9609 20.9609 12.3359 20.6484 12.4609 20.1094L12.9766 17.9297C13.3359 17.8047 13.6953 17.6641 14.0156 17.5156L15.9219 18.6953C16.375 18.9844 16.875 18.9375 17.2422 18.5625L18.5703 17.2422C18.9453 16.8672 19 16.3594 18.6953 15.8984L17.5234 14.0078C17.6719 13.6719 17.8125 13.3281 17.9219 12.9844L20.1172 12.4688C20.6562 12.3438 20.9531 11.9688 20.9531 11.4297L20.9531 9.5625C20.9531 9.03125 20.6562 8.66406 20.1172 8.53125L17.9375 8.00781C17.8125 7.63281 17.6641 7.28906 17.5391 6.98438L18.7109 5.0625C19 4.60156 18.9688 4.125 18.5859 3.74219L17.2422 2.41406C16.8594 2.0625 16.3984 1.98438 15.9453 2.27344L14.0156 3.46875C13.7031 3.3125 13.3516 3.17969 12.9766 3.05469L12.4609 0.851562C12.3359 0.3125 11.9609 0 11.4219 0L9.53125 0C8.99219 0 8.61719 0.3125 8.49219 0.851562L7.97656 3.03906C7.61719 3.16406 7.25781 3.29688 6.92969 3.46094L5.00781 2.27344C4.55469 1.98438 4.07812 2.04688 3.71094 2.41406L2.36719 3.74219C1.98438 4.125 1.95312 4.60156 2.24219 5.0625L3.41406 6.98438C3.28906 7.28906 3.14062 7.63281 3.01562 8.00781L0.835938 8.53125C0.304688 8.66406 0 9.03125 0 9.5625L0 11.4297C0 11.9688 0.304688 12.3438 0.835938 12.4688L3.03125 12.9844C3.14062 13.3281 3.28125 13.6719 3.42969 14.0078L2.25781 15.8984C1.95312 16.3594 2.00781 16.8672 2.38281 17.2422L3.71094 18.5625C4.07812 18.9375 4.57812 18.9844 5.03125 18.6953L6.9375 17.5156C7.26562 17.6641 7.61719 17.8047 7.97656 17.9297L8.49219 20.1094C8.61719 20.6484 8.99219 20.9609 9.53125 20.9609ZM10.4766 14.0625C8.5 14.0625 6.89062 12.4531 6.89062 10.4766C6.89062 8.5 8.5 6.89062 10.4766 6.89062C12.4531 6.89062 14.0625 8.5 14.0625 10.4766C14.0625 12.4531 12.4531 14.0625 10.4766 14.0625Z" fill="currentColor" stroke="none"/></g></svg>
+      </button>
+    </header>
+
+    <div class="statusbar">
+      <div class="l"><span class="dot"></span><span>SYS://ACTIVE</span></div>
+      <div class="r"><span>UTF8</span><span>LIVE</span></div>
+    </div>
+
+    <section class="panel active" id="panelText">
+      <div class="panel-head">
+        <span class="tag"><span class="arrow">▸</span>TXT<span class="role" id="textRole">SRC</span></span>
+        <div class="tools">
+          <button class="tool" data-act="copy" data-tgt="text" aria-label="Copy">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.469 25.18" fill="currentColor"><g><path d="M20.4688 3.03906L20.4688 17.2031C20.4688 19.2188 19.4609 20.2422 17.4609 20.2422L15.5859 20.2422L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L4.88281 4.9375L4.88281 3.03906C4.88281 1.01562 5.89844 0 7.89844 0L17.4609 0C19.4609 0 20.4688 1.01562 20.4688 3.03906ZM10.2891 2.00781C9.875 2.00781 9.67969 2.27344 9.67969 2.5625L9.67969 2.75781C9.67969 3.04688 9.875 3.3125 10.2891 3.3125L15.0703 3.3125C15.4766 3.3125 15.6719 3.04688 15.6719 2.75781L15.6719 2.5625C15.6719 2.27344 15.4766 2.00781 15.0703 2.00781Z" fill="currentColor" stroke="none"/><path d="M0 22.1406C0 24.1641 1.00781 25.1797 3.00781 25.1797L12.5781 25.1797C14.5781 25.1797 15.5859 24.1562 15.5859 22.1406L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L3.00781 4.9375C1.02344 4.9375 0 5.96875 0 7.97656ZM1.38281 22.1172L1.38281 8.00781C1.38281 6.9375 1.96094 6.32031 3.08594 6.32031L6.625 6.32031L6.625 12.3125C6.625 13.5078 7.22656 14.0781 8.39062 14.0781L14.2031 14.0781L14.2031 22.1172C14.2031 23.2031 13.625 23.7969 12.5 23.7969L3.07812 23.7969C1.96094 23.7969 1.38281 23.2031 1.38281 22.1172ZM8.54688 12.7734C8.10156 12.7734 7.92969 12.6016 7.92969 12.1562L7.92969 6.69531L13.9297 12.7734Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+          <button class="tool" data-act="paste" data-tgt="text" aria-label="Paste">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 1.086 16.773 24.203" fill="currentColor"><g><path d="M16.7734 6.79688L16.7734 22.25C16.7734 24.2734 15.7656 25.2891 13.7656 25.2891L3.00781 25.2891C1.00781 25.2891 0 24.2734 0 22.25L0 6.79688C0 4.77344 1.00781 3.75 3.00781 3.75L3.3393 3.75C3.33173 3.82378 3.32812 3.89944 3.32812 3.97656L3.32812 5.02344C3.32812 6.19531 4.14844 7.02344 5.29688 7.02344L11.4766 7.02344C12.625 7.02344 13.4453 6.19531 13.4453 5.02344L13.4453 3.97656C13.4453 3.89944 13.4417 3.82378 13.4341 3.75L13.7656 3.75C15.7656 3.75 16.7734 4.77344 16.7734 6.79688Z" fill="currentColor" stroke="none"/><path d="M5.29688 5.92969L11.4766 5.92969C12.0234 5.92969 12.3594 5.59375 12.3594 5.02344L12.3594 3.97656C12.3594 3.40625 12.0234 3.07031 11.4766 3.07031L10.4688 3.07031C10.4141 1.97656 9.5 1.08594 8.39062 1.08594C7.27344 1.08594 6.35938 1.97656 6.30469 3.07031L5.29688 3.07031C4.75 3.07031 4.41406 3.40625 4.41406 3.97656L4.41406 5.02344C4.41406 5.59375 4.75 5.92969 5.29688 5.92969ZM8.39062 4.02344C7.89062 4.02344 7.49219 3.60938 7.49219 3.13281C7.49219 2.63281 7.89062 2.23438 8.39062 2.23438C8.88281 2.23438 9.28125 2.63281 9.28125 3.13281C9.28125 3.60938 8.88281 4.02344 8.39062 4.02344Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+          <button class="tool" data-act="clear" data-tgt="text" aria-label="Clear">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.024 15.805 15.799" fill="currentColor"><g><path d="M14.501 0.243174L0.219736 14.5244C-0.0693262 14.8135-0.0771387 15.3057 0.219736 15.6025C0.524424 15.8916 1.0088 15.8916 1.30567 15.6025L15.5791 1.3213C15.876 1.03224 15.8838 0.540049 15.5791 0.243174C15.2822-0.0458887 14.7979-0.0537012 14.501 0.243174ZM15.5791 14.5244L1.30567 0.243174C1.0088-0.0458887 0.516611-0.0537012 0.219736 0.243174C-0.0693262 0.547861-0.0693262 1.03224 0.219736 1.3213L14.501 15.6025C14.79 15.8916 15.29 15.8994 15.5791 15.6025C15.876 15.2979 15.876 14.8135 15.5791 14.5244Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+        </div>
+      </div>
+      <div class="content" id="textInput" contenteditable="true" spellcheck="false" data-placeholder="ENTER ASCII...">HELLO</div>
+      <div class="meta"><span id="textMeta">5 CHAR</span><span>ASCII</span></div>
+    </section>
+
+    <div class="swap-wrap">
+      <div class="swap-line l"></div><div class="swap-line r"></div>
+      <button class="swap" id="swap" aria-label="Swap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v12m0 0l-3-3m3 3l3-3M17 20V8m0 0l-3 3m3-3l3 3"/></svg>
+      </button>
+    </div>
+
+    <section class="panel" id="panelBin">
+      <div class="panel-head">
+        <span class="tag"><span class="arrow">▸</span>BIN<span class="role" id="binRole">DST</span></span>
+        <div class="tools">
+          <button class="tool" data-act="copy" data-tgt="bin" aria-label="Copy">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.469 25.18" fill="currentColor"><g><path d="M20.4688 3.03906L20.4688 17.2031C20.4688 19.2188 19.4609 20.2422 17.4609 20.2422L15.5859 20.2422L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L4.88281 4.9375L4.88281 3.03906C4.88281 1.01562 5.89844 0 7.89844 0L17.4609 0C19.4609 0 20.4688 1.01562 20.4688 3.03906ZM10.2891 2.00781C9.875 2.00781 9.67969 2.27344 9.67969 2.5625L9.67969 2.75781C9.67969 3.04688 9.875 3.3125 10.2891 3.3125L15.0703 3.3125C15.4766 3.3125 15.6719 3.04688 15.6719 2.75781L15.6719 2.5625C15.6719 2.27344 15.4766 2.00781 15.0703 2.00781Z" fill="currentColor" stroke="none"/><path d="M0 22.1406C0 24.1641 1.00781 25.1797 3.00781 25.1797L12.5781 25.1797C14.5781 25.1797 15.5859 24.1562 15.5859 22.1406L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L3.00781 4.9375C1.02344 4.9375 0 5.96875 0 7.97656ZM1.38281 22.1172L1.38281 8.00781C1.38281 6.9375 1.96094 6.32031 3.08594 6.32031L6.625 6.32031L6.625 12.3125C6.625 13.5078 7.22656 14.0781 8.39062 14.0781L14.2031 14.0781L14.2031 22.1172C14.2031 23.2031 13.625 23.7969 12.5 23.7969L3.07812 23.7969C1.96094 23.7969 1.38281 23.2031 1.38281 22.1172ZM8.54688 12.7734C8.10156 12.7734 7.92969 12.6016 7.92969 12.1562L7.92969 6.69531L13.9297 12.7734Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+          <button class="tool" data-act="paste" data-tgt="bin" aria-label="Paste">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 1.086 16.773 24.203" fill="currentColor"><g><path d="M16.7734 6.79688L16.7734 22.25C16.7734 24.2734 15.7656 25.2891 13.7656 25.2891L3.00781 25.2891C1.00781 25.2891 0 24.2734 0 22.25L0 6.79688C0 4.77344 1.00781 3.75 3.00781 3.75L3.3393 3.75C3.33173 3.82378 3.32812 3.89944 3.32812 3.97656L3.32812 5.02344C3.32812 6.19531 4.14844 7.02344 5.29688 7.02344L11.4766 7.02344C12.625 7.02344 13.4453 6.19531 13.4453 5.02344L13.4453 3.97656C13.4453 3.89944 13.4417 3.82378 13.4341 3.75L13.7656 3.75C15.7656 3.75 16.7734 4.77344 16.7734 6.79688Z" fill="currentColor" stroke="none"/><path d="M5.29688 5.92969L11.4766 5.92969C12.0234 5.92969 12.3594 5.59375 12.3594 5.02344L12.3594 3.97656C12.3594 3.40625 12.0234 3.07031 11.4766 3.07031L10.4688 3.07031C10.4141 1.97656 9.5 1.08594 8.39062 1.08594C7.27344 1.08594 6.35938 1.97656 6.30469 3.07031L5.29688 3.07031C4.75 3.07031 4.41406 3.40625 4.41406 3.97656L4.41406 5.02344C4.41406 5.59375 4.75 5.92969 5.29688 5.92969ZM8.39062 4.02344C7.89062 4.02344 7.49219 3.60938 7.49219 3.13281C7.49219 2.63281 7.89062 2.23438 8.39062 2.23438C8.88281 2.23438 9.28125 2.63281 9.28125 3.13281C9.28125 3.60938 8.88281 4.02344 8.39062 4.02344Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+          <button class="tool" data-act="clear" data-tgt="bin" aria-label="Clear">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.024 15.805 15.799" fill="currentColor"><g><path d="M14.501 0.243174L0.219736 14.5244C-0.0693262 14.8135-0.0771387 15.3057 0.219736 15.6025C0.524424 15.8916 1.0088 15.8916 1.30567 15.6025L15.5791 1.3213C15.876 1.03224 15.8838 0.540049 15.5791 0.243174C15.2822-0.0458887 14.7979-0.0537012 14.501 0.243174ZM15.5791 14.5244L1.30567 0.243174C1.0088-0.0458887 0.516611-0.0537012 0.219736 0.243174C-0.0693262 0.547861-0.0693262 1.03224 0.219736 1.3213L14.501 15.6025C14.79 15.8916 15.29 15.8994 15.5791 15.6025C15.876 15.2979 15.876 14.8135 15.5791 14.5244Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+        </div>
+      </div>
+      <div class="content" id="binInput" data-placeholder="00000000 ...">01001000 01000101 01001100 01001100 01001111</div>
+      <div class="meta"><span id="binMeta">5 BYTE • 40 BIT</span><span>8-BIT GRP</span></div>
+    </section>
+
+    <div class="kbd" id="kbd">
+      <button class="key inactive" data-k="0">0<span class="lbl">BIT</span></button>
+      <button class="key inactive" data-k="1">1<span class="lbl">BIT</span></button>
+      <button class="key key-back inactive" data-k="back" aria-label="Backspace">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.023 21.539 18.359" fill="currentColor"><g><path d="M18.4922 18.3828C20.5078 18.3828 21.5391 17.375 21.5391 15.375L21.5391 3.03125C21.5391 1.03125 20.5078 0.0234375 18.4922 0.0234375L9.82031 0.0234375C8.66406 0.0234375 7.71094 0.296875 6.91406 1.13281L0.90625 7.33594C0.273438 7.98438 0 8.5625 0 9.17969C0 9.79688 0.265625 10.3828 0.90625 11.0312L6.92188 17.1641C7.71875 17.9922 8.67188 18.375 9.82812 18.375ZM18.4688 17L9.80469 17C9.02344 17 8.5 16.7812 7.95312 16.2188L1.97656 10.1172C1.61719 9.74219 1.5 9.47656 1.5 9.17969C1.5 8.88281 1.625 8.61719 1.97656 8.25L7.94531 2.08594C8.48438 1.52344 9.02344 1.40625 9.79688 1.40625L18.4688 1.40625C19.5547 1.40625 20.1484 1.98438 20.1484 3.10156L20.1484 15.3047C20.1484 16.4219 19.5547 17 18.4688 17Z" fill="currentColor" stroke="none"/><path d="M9.61719 13.1797L16.5703 6.21094C16.7109 6.07812 16.7891 5.91406 16.7891 5.71875C16.7891 5.33594 16.4766 5.03906 16.0859 5.03906C15.8984 5.03906 15.7344 5.10156 15.6016 5.25L8.625 12.1953C8.48438 12.3359 8.40625 12.5 8.40625 12.6953C8.40625 13.0781 8.71875 13.3984 9.10938 13.3984C9.3125 13.3984 9.47656 13.3125 9.61719 13.1797ZM15.5859 13.1797C15.7188 13.3125 15.8828 13.3984 16.0859 13.3984C16.4766 13.3984 16.7891 13.0781 16.7891 12.6953C16.7891 12.5 16.7109 12.3359 16.5703 12.1953L9.60156 5.25C9.46094 5.10156 9.30469 5.03906 9.10938 5.03906C8.71875 5.03906 8.40625 5.33594 8.40625 5.71875C8.40625 5.91406 8.48438 6.07812 8.625 6.21094Z" fill="currentColor" stroke="none"/></g></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let mode = 'tToB';
+const textInput = document.getElementById('textInput');
+const binInput = document.getElementById('binInput');
+const textMeta = document.getElementById('textMeta');
+const binMeta = document.getElementById('binMeta');
+const panelText = document.getElementById('panelText');
+const panelBin = document.getElementById('panelBin');
+const textRole = document.getElementById('textRole');
+const binRole = document.getElementById('binRole');
+const kbdKeys = document.querySelectorAll('.key');
+const swap = document.getElementById('swap');
+
+const t2b = t => [...t].map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+const b2t = b => {
+  const c = b.replace(/\s/g, '');
+  let r = '';
+  for (let i = 0; i < c.length; i += 8) {
+    const byte = c.slice(i, i + 8);
+    if (byte.length === 8 && /^[01]+$/.test(byte)) r += String.fromCharCode(parseInt(byte, 2));
+  }
+  return r;
+};
+
+function updateMeta() {
+  const t = textInput.textContent || '';
+  textMeta.textContent = `${t.length} CHAR`;
+  const bits = (binInput.textContent || '').replace(/\s/g, '').length;
+  binMeta.textContent = `${Math.floor(bits / 8)} BYTE • ${bits} BIT`;
+}
+
+function run() {
+  if (mode === 'tToB') binInput.textContent = t2b(textInput.textContent || '');
+  else textInput.textContent = b2t(binInput.textContent || '');
+  updateMeta();
+}
+
+textInput.addEventListener('input', () => { if (mode === 'tToB') run(); });
+
+document.getElementById('kbd').addEventListener('click', e => {
+  const b = e.target.closest('.key');
+  if (!b || b.classList.contains('inactive')) return;
+  const k = b.dataset.k;
+  let c = (binInput.textContent || '').replace(/\s/g, '');
+  if (k === 'back') c = c.slice(0, -1);
+  else c += k;
+  binInput.textContent = c.match(/.{1,8}/g)?.join(' ') || c;
+  run();
+});
+
+swap.addEventListener('click', () => {
+  if (mode === 'tToB') {
+    mode = 'bToT';
+    panelText.classList.remove('active');
+    panelBin.classList.add('active');
+    textInput.contentEditable = 'false';
+    textRole.textContent = 'DST';
+    binRole.textContent = 'SRC';
+    kbdKeys.forEach(k => k.classList.remove('inactive'));
+  } else {
+    mode = 'tToB';
+    panelBin.classList.remove('active');
+    panelText.classList.add('active');
+    textInput.contentEditable = 'true';
+    textRole.textContent = 'SRC';
+    binRole.textContent = 'DST';
+    kbdKeys.forEach(k => k.classList.add('inactive'));
+  }
+  run();
+});
+
+document.querySelectorAll('.tool').forEach(t => {
+  t.addEventListener('click', async () => {
+    const tgt = t.dataset.tgt === 'text' ? textInput : binInput;
+    const act = t.dataset.act;
+    if (act === 'copy') navigator.clipboard?.writeText(tgt.textContent || '').catch(() => {});
+    else if (act === 'paste') {
+      try {
+        const v = await navigator.clipboard.readText();
+        if (t.dataset.tgt === 'bin') {
+          const c = v.replace(/[^01]/g, '');
+          tgt.textContent = c.match(/.{1,8}/g)?.join(' ') || '';
+        } else tgt.textContent = v;
+        run();
+      } catch {}
+    } else if (act === 'clear') { tgt.textContent = ''; run(); }
+  });
+});
+
+run();
+</script>
+</body>
+</html>

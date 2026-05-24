@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Binary">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#f1f2f4" id="themeColor">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="manifest" href="manifest.json">
+<title>Binary Translator</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="asciiTable/asciiTable.css">
+</head>
+<body>
+
+<div class="phone">
+  <div class="app">
+    <header class="header">
+      <div class="title">
+        <h1 class="name" id="modeTitle">
+          <span id="titleFrom">Text</span>
+          <span class="title-arrow">→</span>
+          <span id="titleTo">Binary</span>
+        </h1>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn ascii-open-btn" id="asciiOpenBtn" aria-label="Open ASCII lookup table" aria-controls="asciiScreen">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.0781 18.3672" fill="currentColor"><g><rect height="18.3672" opacity="0" width="24.0781" x="0" y="0" fill="none" stroke="none"/><path d="M0.414062 7.04688L23.3359 7.04688L23.3359 5.66406L0.414062 5.66406ZM0.414062 12.7109L23.3359 12.7109L23.3359 11.3281L0.414062 11.3281ZM11.1406 17.9531L12.5234 17.9531L12.5234 0.414062L11.1406 0.414062ZM3.03906 18.3672L20.625 18.3672C22.6484 18.3672 23.6719 17.3438 23.6719 15.3594L23.6719 3.01562C23.6719 1.02344 22.6484 0 20.625 0L3.03906 0C1.02344 0 0 1.01562 0 3.01562L0 15.3594C0 17.3594 1.02344 18.3672 3.03906 18.3672ZM3.07031 16.9844C1.97656 16.9844 1.38281 16.4062 1.38281 15.2812L1.38281 3.08594C1.38281 1.96875 1.97656 1.38281 3.07031 1.38281L20.6016 1.38281C21.6719 1.38281 22.2812 1.96875 22.2812 3.08594L22.2812 15.2812C22.2812 16.4062 21.6719 16.9844 20.6016 16.9844Z" fill="currentColor" stroke="none"/></g></svg>
+        </button>
+        <button class="icon-btn settings-btn" id="settingsBtn" aria-label="Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.953 20.961" fill="currentColor"><g><path d="M9.53125 20.9609L11.4219 20.9609C11.9609 20.9609 12.3359 20.6484 12.4609 20.1094L12.9766 17.9297C13.3359 17.8047 13.6953 17.6641 14.0156 17.5156L15.9219 18.6953C16.375 18.9844 16.875 18.9375 17.2422 18.5625L18.5703 17.2422C18.9453 16.8672 19 16.3594 18.6953 15.8984L17.5234 14.0078C17.6719 13.6719 17.8125 13.3281 17.9219 12.9844L20.1172 12.4688C20.6562 12.3438 20.9531 11.9688 20.9531 11.4297L20.9531 9.5625C20.9531 9.03125 20.6562 8.66406 20.1172 8.53125L17.9375 8.00781C17.8125 7.63281 17.6641 7.28906 17.5391 6.98438L18.7109 5.0625C19 4.60156 18.9688 4.125 18.5859 3.74219L17.2422 2.41406C16.8594 2.0625 16.3984 1.98438 15.9453 2.27344L14.0156 3.46875C13.7031 3.3125 13.3516 3.17969 12.9766 3.05469L12.4609 0.851562C12.3359 0.3125 11.9609 0 11.4219 0L9.53125 0C8.99219 0 8.61719 0.3125 8.49219 0.851562L7.97656 3.03906C7.61719 3.16406 7.25781 3.29688 6.92969 3.46094L5.00781 2.27344C4.55469 1.98438 4.07812 2.04688 3.71094 2.41406L2.36719 3.74219C1.98438 4.125 1.95312 4.60156 2.24219 5.0625L3.41406 6.98438C3.28906 7.28906 3.14062 7.63281 3.01562 8.00781L0.835938 8.53125C0.304688 8.66406 0 9.03125 0 9.5625L0 11.4297C0 11.9688 0.304688 12.3438 0.835938 12.4688L3.03125 12.9844C3.14062 13.3281 3.28125 13.6719 3.42969 14.0078L2.25781 15.8984C1.95312 16.3594 2.00781 16.8672 2.38281 17.2422L3.71094 18.5625C4.07812 18.9375 4.57812 18.9844 5.03125 18.6953L6.9375 17.5156C7.26562 17.6641 7.61719 17.8047 7.97656 17.9297L8.49219 20.1094C8.61719 20.6484 8.99219 20.9609 9.53125 20.9609ZM10.4766 14.0625C8.5 14.0625 6.89062 12.4531 6.89062 10.4766C6.89062 8.5 8.5 6.89062 10.4766 6.89062C12.4531 6.89062 14.0625 8.5 14.0625 10.4766C14.0625 12.4531 12.4531 14.0625 10.4766 14.0625Z" fill="currentColor" stroke="none"/></g></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="panel active" id="panelText">
+      <div class="panel-head">
+        <span class="tag">
+          <span class="name">Text</span>
+        </span>
+        <div class="tools">
+          <button class="tool" data-act="copy" data-tgt="text" aria-label="Copy text">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.469 25.18" fill="currentColor"><g><path d="M20.4688 3.03906L20.4688 17.2031C20.4688 19.2188 19.4609 20.2422 17.4609 20.2422L15.5859 20.2422L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L4.88281 4.9375L4.88281 3.03906C4.88281 1.01562 5.89844 0 7.89844 0L17.4609 0C19.4609 0 20.4688 1.01562 20.4688 3.03906ZM10.2891 2.00781C9.875 2.00781 9.67969 2.27344 9.67969 2.5625L9.67969 2.75781C9.67969 3.04688 9.875 3.3125 10.2891 3.3125L15.0703 3.3125C15.4766 3.3125 15.6719 3.04688 15.6719 2.75781L15.6719 2.5625C15.6719 2.27344 15.4766 2.00781 15.0703 2.00781Z" fill="currentColor" stroke="none"/><path d="M0 22.1406C0 24.1641 1.00781 25.1797 3.00781 25.1797L12.5781 25.1797C14.5781 25.1797 15.5859 24.1562 15.5859 22.1406L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L3.00781 4.9375C1.02344 4.9375 0 5.96875 0 7.97656ZM1.38281 22.1172L1.38281 8.00781C1.38281 6.9375 1.96094 6.32031 3.08594 6.32031L6.625 6.32031L6.625 12.3125C6.625 13.5078 7.22656 14.0781 8.39062 14.0781L14.2031 14.0781L14.2031 22.1172C14.2031 23.2031 13.625 23.7969 12.5 23.7969L3.07812 23.7969C1.96094 23.7969 1.38281 23.2031 1.38281 22.1172ZM8.54688 12.7734C8.10156 12.7734 7.92969 12.6016 7.92969 12.1562L7.92969 6.69531L13.9297 12.7734Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+          <button class="tool" data-act="clear" data-tgt="text" aria-label="Clear text">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.024 15.805 15.799" fill="currentColor"><g><path d="M14.501 0.243174L0.219736 14.5244C-0.0693262 14.8135-0.0771387 15.3057 0.219736 15.6025C0.524424 15.8916 1.0088 15.8916 1.30567 15.6025L15.5791 1.3213C15.876 1.03224 15.8838 0.540049 15.5791 0.243174C15.2822-0.0458887 14.7979-0.0537012 14.501 0.243174ZM15.5791 14.5244L1.30567 0.243174C1.0088-0.0458887 0.516611-0.0537012 0.219736 0.243174C-0.0693262 0.547861-0.0693262 1.03224 0.219736 1.3213L14.501 15.6025C14.79 15.8916 15.29 15.8994 15.5791 15.6025C15.876 15.2979 15.876 14.8135 15.5791 14.5244Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+        </div>
+      </div>
+      <div class="content" id="textInput" contenteditable="true" spellcheck="false" autocapitalize="off" autocorrect="off" data-placeholder="Begin typing&hellip;"></div>
+      <div class="meta">
+        <span><span class="num" id="textNum">0</span><span id="textNumWord">characters</span></span>
+        <span id="textEnc">UTF-8</span>
+      </div>
+    </section>
+
+    <div class="swap-wrap">
+      <button class="swap" id="swap" aria-label="Swap direction">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 4v12m0 0l-3-3m3 3l3-3M17 20V8m0 0l-3 3m3-3l3 3"/></svg>
+      </button>
+    </div>
+
+    <section class="panel" id="panelBin">
+      <div class="panel-head">
+        <span class="tag">
+          <span class="name">Binary</span>
+        </span>
+        <div class="tools">
+          <button class="tool" data-act="copy" data-tgt="bin" aria-label="Copy binary">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.469 25.18" fill="currentColor"><g><path d="M20.4688 3.03906L20.4688 17.2031C20.4688 19.2188 19.4609 20.2422 17.4609 20.2422L15.5859 20.2422L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L4.88281 4.9375L4.88281 3.03906C4.88281 1.01562 5.89844 0 7.89844 0L17.4609 0C19.4609 0 20.4688 1.01562 20.4688 3.03906ZM10.2891 2.00781C9.875 2.00781 9.67969 2.27344 9.67969 2.5625L9.67969 2.75781C9.67969 3.04688 9.875 3.3125 10.2891 3.3125L15.0703 3.3125C15.4766 3.3125 15.6719 3.04688 15.6719 2.75781L15.6719 2.5625C15.6719 2.27344 15.4766 2.00781 15.0703 2.00781Z" fill="currentColor" stroke="none"/><path d="M0 22.1406C0 24.1641 1.00781 25.1797 3.00781 25.1797L12.5781 25.1797C14.5781 25.1797 15.5859 24.1562 15.5859 22.1406L15.5859 14.0781C15.5859 12.9141 15.4453 12.4062 14.7188 11.6719L8.92969 5.80469C8.24219 5.10156 7.67969 4.9375 6.64062 4.9375L3.00781 4.9375C1.02344 4.9375 0 5.96875 0 7.97656ZM1.38281 22.1172L1.38281 8.00781C1.38281 6.9375 1.96094 6.32031 3.08594 6.32031L6.625 6.32031L6.625 12.3125C6.625 13.5078 7.22656 14.0781 8.39062 14.0781L14.2031 14.0781L14.2031 22.1172C14.2031 23.2031 13.625 23.7969 12.5 23.7969L3.07812 23.7969C1.96094 23.7969 1.38281 23.2031 1.38281 22.1172ZM8.54688 12.7734C8.10156 12.7734 7.92969 12.6016 7.92969 12.1562L7.92969 6.69531L13.9297 12.7734Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+          <button class="tool" data-act="clear" data-tgt="bin" aria-label="Clear binary">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.024 15.805 15.799" fill="currentColor"><g><path d="M14.501 0.243174L0.219736 14.5244C-0.0693262 14.8135-0.0771387 15.3057 0.219736 15.6025C0.524424 15.8916 1.0088 15.8916 1.30567 15.6025L15.5791 1.3213C15.876 1.03224 15.8838 0.540049 15.5791 0.243174C15.2822-0.0458887 14.7979-0.0537012 14.501 0.243174ZM15.5791 14.5244L1.30567 0.243174C1.0088-0.0458887 0.516611-0.0537012 0.219736 0.243174C-0.0693262 0.547861-0.0693262 1.03224 0.219736 1.3213L14.501 15.6025C14.79 15.8916 15.29 15.8994 15.5791 15.6025C15.876 15.2979 15.876 14.8135 15.5791 14.5244Z" fill="currentColor" stroke="none"/></g></svg>
+          </button>
+        </div>
+      </div>
+      <div class="content" id="binInput" contenteditable="false" inputmode="none" spellcheck="false" autocapitalize="off" autocorrect="off" role="textbox" aria-label="Binary input" aria-multiline="true" tabindex="0" data-placeholder="zeroes and ones&hellip;"></div>
+      <div class="meta">
+        <span><span class="num" id="binNum">0</span><span id="binNumWord">bytes</span><span class="dot-sep">&middot;</span><span id="binBits">0 bits</span></span>
+        <span>8-bit</span>
+      </div>
+    </section>
+
+    <div class="kbd hidden" id="kbd">
+      <button class="key" type="button" data-k="0" aria-label="Zero">0</button>
+      <button class="key" type="button" data-k="1" aria-label="One">1</button>
+      <button class="key key-back" type="button" data-k="back" aria-label="Backspace">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.023 21.539 18.359" fill="currentColor"><g><path d="M18.4922 18.3828C20.5078 18.3828 21.5391 17.375 21.5391 15.375L21.5391 3.03125C21.5391 1.03125 20.5078 0.0234375 18.4922 0.0234375L9.82031 0.0234375C8.66406 0.0234375 7.71094 0.296875 6.91406 1.13281L0.90625 7.33594C0.273438 7.98438 0 8.5625 0 9.17969C0 9.79688 0.265625 10.3828 0.90625 11.0312L6.92188 17.1641C7.71875 17.9922 8.67188 18.375 9.82812 18.375ZM18.4688 17L9.80469 17C9.02344 17 8.5 16.7812 7.95312 16.2188L1.97656 10.1172C1.61719 9.74219 1.5 9.47656 1.5 9.17969C1.5 8.88281 1.625 8.61719 1.97656 8.25L7.94531 2.08594C8.48438 1.52344 9.02344 1.40625 9.79688 1.40625L18.4688 1.40625C19.5547 1.40625 20.1484 1.98438 20.1484 3.10156L20.1484 15.3047C20.1484 16.4219 19.5547 17 18.4688 17Z" fill="currentColor" stroke="none"/><path d="M9.61719 13.1797L16.5703 6.21094C16.7109 6.07812 16.7891 5.91406 16.7891 5.71875C16.7891 5.33594 16.4766 5.03906 16.0859 5.03906C15.8984 5.03906 15.7344 5.10156 15.6016 5.25L8.625 12.1953C8.48438 12.3359 8.40625 12.5 8.40625 12.6953C8.40625 13.0781 8.71875 13.3984 9.10938 13.3984C9.3125 13.3984 9.47656 13.3125 9.61719 13.1797ZM15.5859 13.1797C15.7188 13.3125 15.8828 13.3984 16.0859 13.3984C16.4766 13.3984 16.7891 13.0781 16.7891 12.6953C16.7891 12.5 16.7109 12.3359 16.5703 12.1953L9.60156 5.25C9.46094 5.10156 9.30469 5.03906 9.10938 5.03906C8.71875 5.03906 8.40625 5.33594 8.40625 5.71875C8.40625 5.91406 8.48438 6.07812 8.625 6.21094Z" fill="currentColor" stroke="none"/></g></svg>
+      </button>
+    </div>
+  </div>
+
+  <section class="ascii-screen" id="asciiScreen" aria-hidden="true" aria-label="ASCII lookup table">
+    <div class="ascii-topbar">
+      <button class="ascii-back" id="asciiBackBtn" aria-label="Close ASCII lookup table">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="ascii-title-block">
+        <h2>ASCII Table</h2>
+        <span id="asciiCount">128 codes</span>
+      </div>
+    </div>
+
+    <div class="ascii-controls">
+      <div class="ascii-filter-wrap" id="asciiFilters" aria-label="ASCII category filter"></div>
+      <label class="ascii-search" for="asciiSearch">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.9"/>
+          <path d="M16 16l4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+        </svg>
+        <input id="asciiSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search A, space, 65, 0x41, 01000001">
+      </label>
+    </div>
+
+    <div class="ascii-table-shell">
+      <div class="ascii-table-head" aria-hidden="true">
+        <span>Character</span>
+        <span>Binary</span>
+        <span>Dec</span>
+        <span>Hex</span>
+        <span>Description</span>
+      </div>
+      <div class="ascii-list" id="asciiList"></div>
+      <div class="ascii-empty" id="asciiEmpty" hidden>No matching codes</div>
+    </div>
+
+    <div class="ascii-toast" id="asciiToast" role="status" aria-live="polite"></div>
+  </section>
+</div>
+
+<!-- Settings Sheet -->
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2 class="sheet-title">Settings</h2>
+    <button class="sheet-close" id="sheetClose" aria-label="Close settings">Done</button>
+  </div>
+  <div class="sheet-body">
+
+    <div class="setting">
+      <div class="setting-label">Appearance</div>
+      <div class="seg" data-setting="theme">
+        <button class="seg-btn active" data-val="light">Light</button>
+        <button class="seg-btn" data-val="dark">Dark</button>
+        <button class="seg-btn" data-val="auto">Auto</button>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div class="setting-label">Byte separator</div>
+      <div class="seg" data-setting="separator">
+        <button class="seg-btn active" data-val="space">Space</button>
+        <button class="seg-btn" data-val="comma">Comma</button>
+        <button class="seg-btn" data-val="dash">Dash</button>
+        <button class="seg-btn" data-val="custom">Custom</button>
+      </div>
+      <input type="text" class="sep-custom" id="sepCustom" placeholder="Type your separator (e.g. | or &middot;)" maxlength="3" hidden>
+    </div>
+
+    <div class="setting">
+      <div class="setting-label">Encoding</div>
+      <div class="seg" data-setting="encoding">
+        <button class="seg-btn active" data-val="utf8">UTF-8</button>
+        <button class="seg-btn" data-val="ascii">ASCII</button>
+      </div>
+      <div class="setting-hint">UTF-8 supports emoji and accented characters. ASCII is English only.</div>
+    </div>
+
+    <div class="setting setting-row">
+      <div>
+        <div class="setting-label">Tap byte to preview</div>
+        <div class="setting-hint">Tap a binary byte to see its character</div>
+      </div>
+      <button class="toggle" id="tapPreviewToggle" role="switch" aria-checked="true">
+        <span class="toggle-track"><span class="toggle-knob"></span></span>
+      </button>
+    </div>
+
+    <div class="setting-foot">
+      <button class="reset-btn" id="resetSettings">Reset to defaults</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Byte preview toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="script.js"></script>
+<script src="asciiTable/asciiTable.js"></script>
+</body>
+</html>
