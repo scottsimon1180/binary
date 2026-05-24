@@ -20,7 +20,9 @@
   function loadSettings() {
     try {
       const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      return { ...DEFAULTS, ...s };
+      const settings = { ...DEFAULTS, ...s };
+      if (settings.separator === 'dash') settings.separator = 'none';
+      return settings;
     } catch { return { ...DEFAULTS }; }
   }
 
@@ -75,7 +77,7 @@
   function getSeparator() {
     switch (State.settings.separator) {
       case 'comma':  return ',';
-      case 'dash':   return '-';
+      case 'none':   return '';
       case 'custom': return State.settings.customSeparator || '';
       default:       return ' ';
     }
