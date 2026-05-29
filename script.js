@@ -5,13 +5,15 @@
   const STORAGE_KEY = 'binary-translator-v1';
   const DEFAULTS = {
     theme: 'dark',
+    accent: 'blue',
     separator: 'space',
     customSeparator: '\u00b7',
     encoding: 'utf8',
     tapPreview: true,
   };
   const VALID_SETTING_VALUES = {
-    theme: new Set(['light', 'dark', 'auto']),
+    theme: new Set(['dark', 'electric']),
+    accent: new Set(['blue', 'green']),
     separator: new Set(['space', 'comma', 'none', 'custom']),
     encoding: new Set(['utf8', 'ascii']),
   };
@@ -39,6 +41,9 @@
 
     if (!VALID_SETTING_VALUES.theme.has(normalized.theme)) {
       normalized.theme = DEFAULTS.theme;
+    }
+    if (!VALID_SETTING_VALUES.accent.has(normalized.accent)) {
+      normalized.accent = DEFAULTS.accent;
     }
     if (!VALID_SETTING_VALUES.separator.has(normalized.separator)) {
       normalized.separator = DEFAULTS.separator;
@@ -79,13 +84,17 @@
   const sheet      = $('settingsSheet');
   const sheetBack  = $('sheetBackdrop');
   const sheetClose = $('sheetClose');
+  const sheetCancel= $('sheetCancel');
+  const sheetOk    = $('sheetOk');
   const sepCustom  = $('sepCustom');
   const tapToggle  = $('tapPreviewToggle');
   const resetBtn   = $('resetSettings');
   const toast      = $('toast');
   const themeColor = $('themeColor');
   const root       = document.documentElement;
+  const app        = document.querySelector('.app');
   let titleAnimationTimer;
+  let panelSwapTimer;
   let activeKeyButton;
   let keyReleaseTimer;
   let repeatDelayTimer;
@@ -164,9 +173,14 @@
 
     chunks.forEach((chunk, chunkIndex) => {
       if (chunkIndex > 0) {
-        for (const char of sep) {
-          text += char;
+        if (chunkIndex % 4 === 0) {
+          text += '\n';
           bitIndexByOffset[text.length] = bitIndex;
+        } else {
+          for (const char of sep) {
+            text += char;
+            bitIndexByOffset[text.length] = bitIndex;
+          }
         }
       }
 
@@ -380,11 +394,21 @@
     return byte.length === 8 ? byte : '';
   }
 
+  // ---------- Keyboard show/hide (iOS-style) ----------
+  function showKeyboard() {
+    kbd.classList.remove('hidden');
+  }
+
+  function hideKeyboard() {
+    kbd.classList.add('hidden');
+  }
+
   // ---------- Mode handling ----------
   function setMode(next) {
     const previous = State.mode;
     State.mode = next;
     updateModeTitle(next, previous !== next);
+    applyPanelOrder(next, previous !== next);
 
     if (next === 'tToB') {
       panelText.classList.add('active');
@@ -392,7 +416,9 @@
       textInput.setAttribute('contenteditable', 'true');
       binInput.setAttribute('contenteditable', 'false');
       binInput.setAttribute('aria-readonly', 'true');
-      kbd.classList.add('hidden');
+      binInput.blur();
+      textInput.blur();
+      hideKeyboard();
     } else {
       panelBin.classList.add('active');
       panelText.classList.remove('active');
@@ -400,7 +426,8 @@
       binInput.setAttribute('contenteditable', 'plaintext-only');
       binInput.setAttribute('aria-readonly', 'false');
       textInput.blur();
-      kbd.classList.remove('hidden');
+      binInput.blur();
+      hideKeyboard();
     }
   }
 
@@ -435,8 +462,48 @@
       titleAnimationTimer = setTimeout(() => {
         modeTitle.classList.remove('title-enter');
         modeTitle.style.width = '';
-      }, 210);
-    }, 120);
+      }, 360);
+    }, 150);
+  }
+
+  // Active panel slides to the top; the other slides down (FLIP animation).
+  function applyPanelOrder(mode, animate) {
+    const shouldSwap = mode === 'bToT';
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    if (!animate || reduceMotion) {
+      app.classList.toggle('swapped', shouldSwap);
+      return;
+    }
+
+    const firstText = panelText.getBoundingClientRect().top;
+    const firstBin = panelBin.getBoundingClientRect().top;
+
+    app.classList.toggle('swapped', shouldSwap);
+
+    const dyText = firstText - panelText.getBoundingClientRect().top;
+    const dyBin = firstBin - panelBin.getBoundingClientRect().top;
+
+    clearTimeout(panelSwapTimer);
+    for (const [el, dy] of [[panelText, dyText], [panelBin, dyBin]]) {
+      el.style.willChange = 'transform';
+      el.style.transition = 'none';
+      el.style.transform = `translateY(${dy}px)`;
+    }
+
+    void panelText.offsetHeight; // lock in the inverted start position
+
+    for (const el of [panelText, panelBin]) {
+      el.style.transition = 'transform 0.48s cubic-bezier(0.65, 0, 0.35, 1)';
+      el.style.transform = '';
+    }
+
+    panelSwapTimer = setTimeout(() => {
+      for (const el of [panelText, panelBin]) {
+        el.style.transition = '';
+        el.style.willChange = '';
+      }
+    }, 520);
   }
 
   // ---------- Event: text input ----------
@@ -457,13 +524,7 @@
   });
 
   textInput.addEventListener('pointerdown', (e) => {
-    if (State.mode === 'tToB') return;
-    setMode('tToB');
-    focusTextAtPoint(e.clientX, e.clientY);
-  });
-
-  textInput.addEventListener('focus', () => {
-    if (State.mode !== 'tToB') setMode('tToB');
+    if (State.mode !== 'tToB') e.preventDefault();
   });
 
   // Prevent rich paste/formatting in text panel
@@ -609,20 +670,27 @@
   });
 
   binInput.addEventListener('pointerdown', (e) => {
-    if (State.mode === 'bToT') {
-      return;
-    }
-    e.preventDefault();
-    suppressNextBytePreview = true;
-    setMode('bToT');
-    focusBinaryAtPoint(e.clientX, e.clientY);
+    if (State.mode !== 'bToT') e.preventDefault();
   });
 
+  // Keyboard rides the binary field's focus, like the iOS software keyboard.
   binInput.addEventListener('focus', () => {
-    if (State.mode !== 'bToT') {
-      setMode('bToT');
-      requestAnimationFrame(() => setBinarySelectionByBitRange(State.bits.length));
-    }
+    if (State.mode === 'bToT') showKeyboard();
+  });
+
+  binInput.addEventListener('blur', () => {
+    // Defer: re-rendering the field re-asserts focus, so only dismiss on a real blur.
+    setTimeout(() => {
+      if (document.activeElement !== binInput) hideKeyboard();
+    }, 0);
+  });
+
+  // Tapping anywhere outside the field or its keyboard dismisses the keyboard.
+  document.addEventListener('pointerdown', (e) => {
+    if (kbd.classList.contains('hidden')) return;
+    if (kbd.contains(e.target) || binInput.contains(e.target)) return;
+    binInput.blur();
+    hideKeyboard();
   });
 
   binInput.addEventListener('beforeinput', (e) => {
@@ -809,6 +877,7 @@
 
   // ---------- Event: byte tap (preview) ----------
   let toastTimer;
+  let flashTimer;
   binInput.addEventListener('click', (e) => {
     if (suppressNextBytePreview) {
       suppressNextBytePreview = false;
@@ -817,10 +886,102 @@
     if (!State.settings.tapPreview) return;
     const displayOffset = getDisplayOffsetAtPoint(e.clientX, e.clientY);
     if (displayOffset === null) return;
-    const bits = getByteBitsAtDisplayOffset(displayOffset);
-    if (!bits) return;
-    showBytePreview(bits);
+    const byteStartBit = getByteStartBitAtDisplayOffset(displayOffset);
+    if (byteStartBit === null) return;
+    flashByte(byteStartBit);
   });
+
+  function getByteStartBitAtDisplayOffset(displayOffset) {
+    const data = getBinaryDisplayData();
+    const offset = Math.max(0, Math.min(data.text.length, displayOffset));
+    let bitIndex = data.bitIndexByCharOffset[offset];
+    if (typeof bitIndex !== 'number') bitIndex = data.bitIndexByCharOffset[offset - 1];
+    if (typeof bitIndex !== 'number') return null;
+    const byteStart = Math.floor(clampBitIndex(bitIndex) / 8) * 8;
+    return State.bits.slice(byteStart, byteStart + 8).length === 8 ? byteStart : null;
+  }
+
+  // Byte span [start, end) of the character that owns byteIndex (multi-byte aware for UTF-8).
+  function byteSpanForChar(bytes, byteIndex) {
+    if (State.settings.encoding !== 'utf8') return [byteIndex, byteIndex + 1];
+    let start = byteIndex;
+    while (start > 0 && (bytes[start] & 0xC0) === 0x80) start--; // walk back over continuation bytes
+    const lead = bytes[start];
+    let len = 1;
+    if (lead >= 0xF0) len = 4;
+    else if (lead >= 0xE0) len = 3;
+    else if (lead >= 0xC0) len = 2;
+    let end = start + 1;
+    while (end < bytes.length && end < start + len && (bytes[end] & 0xC0) === 0x80) end++;
+    return [start, end];
+  }
+
+  let flashOverlays = [];
+
+  function clearByteFlash() {
+    flashOverlays.forEach(ov => ov.remove());
+    flashOverlays = [];
+  }
+
+  // A transparent mirror of contentEl with only [start, end) colored, so the
+  // flash can fade its opacity in/out without disturbing the editable field.
+  function buildFlashOverlay(contentEl, kind, text, start, end) {
+    const panel = contentEl.parentNode;
+    if (!panel) return;
+    const cs = getComputedStyle(contentEl);
+    const ov = document.createElement('div');
+    ov.className = `byte-flash-overlay ${kind}`;
+    ov.style.left = `${contentEl.offsetLeft}px`;
+    ov.style.top = `${contentEl.offsetTop}px`;
+    ov.style.width = `${contentEl.offsetWidth}px`;
+    ov.style.height = `${contentEl.offsetHeight}px`;
+    [
+      'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'letterSpacing', 'lineHeight',
+      'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+      'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth',
+      'textAlign', 'whiteSpace', 'wordBreak', 'overflowWrap',
+    ].forEach(p => { ov.style[p] = cs[p]; });
+    ov.innerHTML = `${escapeHtml(text.slice(0, start))}<span class="fx">${escapeHtml(text.slice(start, end))}</span>${escapeHtml(text.slice(end))}`;
+    panel.appendChild(ov);
+    ov.scrollTop = contentEl.scrollTop;
+    flashOverlays.push(ov);
+  }
+
+  // Briefly fade the tapped byte (plus its sibling bytes for multi-byte chars)
+  // in the binary panel and the matching character in the text panel to color,
+  // then fade back.
+  function flashByte(byteStartBit) {
+    clearTimeout(flashTimer);
+    clearByteFlash();
+
+    const bytes = (State.bits.match(/.{8}/g) || []).map(b => parseInt(b, 2));
+    const byteIndex = byteStartBit / 8;
+    if (byteIndex >= bytes.length) return;
+    const [startByte, endByte] = byteSpanForChar(bytes, byteIndex);
+
+    const data = getBinaryDisplayData();
+    const binStart = data.offsetByBitIndex[startByte * 8];
+    const binEnd = data.offsetByBitIndex[endByte * 8];
+    if (typeof binStart === 'number' && typeof binEnd === 'number') {
+      buildFlashOverlay(binInput, 'bin', data.text, binStart, binEnd);
+    }
+
+    const fullText = bytesToText(bytes);
+    if (textInput.textContent === fullText) {
+      const txtStart = bytesToText(bytes.slice(0, startByte)).length;
+      const txtEnd = bytesToText(bytes.slice(0, endByte)).length;
+      buildFlashOverlay(textInput, 'text', fullText, txtStart, txtEnd);
+    }
+
+    const overlays = flashOverlays;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      overlays.forEach(ov => ov.classList.add('show'));
+    }));
+    flashTimer = setTimeout(() => {
+      overlays.forEach(ov => ov.classList.remove('show'));
+      setTimeout(() => overlays.forEach(ov => ov.remove()), 260);
+    }, 1400);
+  }
 
   function showBytePreview(bits) {
     const code = parseInt(bits, 2);
@@ -843,20 +1004,44 @@
     toastTimer = setTimeout(() => toast.classList.remove('show'), 1700);
   }
 
-  // ---------- Settings sheet ----------
+  // ---------- Settings modal ----------
+  // Settings apply live; snapshot on open so Cancel/X can revert.
+  let settingsSnapshot = null;
+
   function openSheet() {
+    settingsSnapshot = { ...State.settings };
     sheet.classList.add('open');
     sheetBack.classList.add('open');
     sheet.setAttribute('aria-hidden', 'false');
   }
-  function closeSheet() {
+  function hideSheet() {
     sheet.classList.remove('open');
     sheetBack.classList.remove('open');
     sheet.setAttribute('aria-hidden', 'true');
   }
+  // OK: keep current (already-applied) settings.
+  function confirmSheet() {
+    settingsSnapshot = null;
+    hideSheet();
+  }
+  // Cancel / X / backdrop: revert to the snapshot taken on open.
+  function cancelSheet() {
+    if (settingsSnapshot) {
+      State.settings = settingsSnapshot;
+      settingsSnapshot = null;
+      saveSettings();
+      applySettingsToUI();
+      applyTheme(State.settings.theme);
+      applyAccent(State.settings.accent);
+      refresh();
+    }
+    hideSheet();
+  }
   settingsBtn.addEventListener('click', openSheet);
-  sheetClose.addEventListener('click', closeSheet);
-  sheetBack.addEventListener('click', closeSheet);
+  sheetClose.addEventListener('click', cancelSheet);
+  sheetCancel.addEventListener('click', cancelSheet);
+  sheetBack.addEventListener('click', cancelSheet);
+  sheetOk.addEventListener('click', confirmSheet);
 
   // Segmented controls
   document.querySelectorAll('.seg').forEach(seg => {
@@ -875,7 +1060,8 @@
           setTimeout(() => sepCustom.focus(), 50);
         }
       }
-      if (key === 'theme') applyTheme(val);
+      if (key === 'theme') { applyTheme(val); applyAccent(State.settings.accent); }
+      if (key === 'accent') applyAccent(val);
 
       saveSettings();
       if (key === 'encoding') {
@@ -911,12 +1097,20 @@
     saveSettings();
     applySettingsToUI();
     applyTheme(State.settings.theme);
+    applyAccent(State.settings.accent);
     refresh();
   });
 
   // Apply theme to root
   function applyTheme(t) {
     root.setAttribute('data-theme', t);
+    requestAnimationFrame(updateThemeColor);
+  }
+
+  // Apply accent color to root
+  function applyAccent(a) {
+    // Electric theme drives both accents itself, so ignore the stored accent.
+    root.setAttribute('data-accent', State.settings.theme === 'electric' ? 'blue' : a);
     requestAnimationFrame(updateThemeColor);
   }
 
@@ -962,6 +1156,7 @@
   // ---------- Init ----------
   function init() {
     applyTheme(State.settings.theme);
+    applyAccent(State.settings.accent);
     applySettingsToUI();
     setMode('tToB');
     State.bits = '';

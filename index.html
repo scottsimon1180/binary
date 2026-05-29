@@ -9,9 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Binary">
 <meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#1a1a1e" id="themeColor">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" href="images/icon-1024.png">
 <link rel="manifest" href="manifest.json">
 <title>Binary Translator</title>
 <link rel="stylesheet" href="style.css">
@@ -87,13 +85,14 @@
       </div>
     </section>
 
-    <div class="kbd hidden" id="kbd">
-      <button class="key" type="button" data-k="0" aria-label="Zero">0</button>
-      <button class="key" type="button" data-k="1" aria-label="One">1</button>
-      <button class="key key-back" type="button" data-k="back" aria-label="Backspace">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.023 21.539 18.359" fill="currentColor"><g><path d="M18.4922 18.3828C20.5078 18.3828 21.5391 17.375 21.5391 15.375L21.5391 3.03125C21.5391 1.03125 20.5078 0.0234375 18.4922 0.0234375L9.82031 0.0234375C8.66406 0.0234375 7.71094 0.296875 6.91406 1.13281L0.90625 7.33594C0.273438 7.98438 0 8.5625 0 9.17969C0 9.79688 0.265625 10.3828 0.90625 11.0312L6.92188 17.1641C7.71875 17.9922 8.67188 18.375 9.82812 18.375ZM18.4688 17L9.80469 17C9.02344 17 8.5 16.7812 7.95312 16.2188L1.97656 10.1172C1.61719 9.74219 1.5 9.47656 1.5 9.17969C1.5 8.88281 1.625 8.61719 1.97656 8.25L7.94531 2.08594C8.48438 1.52344 9.02344 1.40625 9.79688 1.40625L18.4688 1.40625C19.5547 1.40625 20.1484 1.98438 20.1484 3.10156L20.1484 15.3047C20.1484 16.4219 19.5547 17 18.4688 17Z" fill="currentColor" stroke="none"/><path d="M9.61719 13.1797L16.5703 6.21094C16.7109 6.07812 16.7891 5.91406 16.7891 5.71875C16.7891 5.33594 16.4766 5.03906 16.0859 5.03906C15.8984 5.03906 15.7344 5.10156 15.6016 5.25L8.625 12.1953C8.48438 12.3359 8.40625 12.5 8.40625 12.6953C8.40625 13.0781 8.71875 13.3984 9.10938 13.3984C9.3125 13.3984 9.47656 13.3125 9.61719 13.1797ZM15.5859 13.1797C15.7188 13.3125 15.8828 13.3984 16.0859 13.3984C16.4766 13.3984 16.7891 13.0781 16.7891 12.6953C16.7891 12.5 16.7109 12.3359 16.5703 12.1953L9.60156 5.25C9.46094 5.10156 9.30469 5.03906 9.10938 5.03906C8.71875 5.03906 8.40625 5.33594 8.40625 5.71875C8.40625 5.91406 8.48438 6.07812 8.625 6.21094Z" fill="currentColor" stroke="none"/></g></svg>
-      </button>
-    </div>
+  </div>
+
+  <div class="kbd hidden" id="kbd">
+    <button class="key" type="button" data-k="0" aria-label="Zero">0</button>
+    <button class="key" type="button" data-k="1" aria-label="One">1</button>
+    <button class="key key-back" type="button" data-k="back" aria-label="Backspace">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0.023 21.539 18.359" fill="currentColor"><g><path d="M18.4922 18.3828C20.5078 18.3828 21.5391 17.375 21.5391 15.375L21.5391 3.03125C21.5391 1.03125 20.5078 0.0234375 18.4922 0.0234375L9.82031 0.0234375C8.66406 0.0234375 7.71094 0.296875 6.91406 1.13281L0.90625 7.33594C0.273438 7.98438 0 8.5625 0 9.17969C0 9.79688 0.265625 10.3828 0.90625 11.0312L6.92188 17.1641C7.71875 17.9922 8.67188 18.375 9.82812 18.375ZM18.4688 17L9.80469 17C9.02344 17 8.5 16.7812 7.95312 16.2188L1.97656 10.1172C1.61719 9.74219 1.5 9.47656 1.5 9.17969C1.5 8.88281 1.625 8.61719 1.97656 8.25L7.94531 2.08594C8.48438 1.52344 9.02344 1.40625 9.79688 1.40625L18.4688 1.40625C19.5547 1.40625 20.1484 1.98438 20.1484 3.10156L20.1484 15.3047C20.1484 16.4219 19.5547 17 18.4688 17Z" fill="currentColor" stroke="none"/><path d="M9.61719 13.1797L16.5703 6.21094C16.7109 6.07812 16.7891 5.91406 16.7891 5.71875C16.7891 5.33594 16.4766 5.03906 16.0859 5.03906C15.8984 5.03906 15.7344 5.10156 15.6016 5.25L8.625 12.1953C8.48438 12.3359 8.40625 12.5 8.40625 12.6953C8.40625 13.0781 8.71875 13.3984 9.10938 13.3984C9.3125 13.3984 9.47656 13.3125 9.61719 13.1797ZM15.5859 13.1797C15.7188 13.3125 15.8828 13.3984 16.0859 13.3984C16.4766 13.3984 16.7891 13.0781 16.7891 12.6953C16.7891 12.5 16.7109 12.3359 16.5703 12.1953L9.60156 5.25C9.46094 5.10156 9.30469 5.03906 9.10938 5.03906C8.71875 5.03906 8.40625 5.33594 8.40625 5.71875C8.40625 5.91406 8.48438 6.07812 8.625 6.21094Z" fill="currentColor" stroke="none"/></g></svg>
+    </button>
   </div>
 
   <section class="ascii-screen" id="asciiScreen" aria-hidden="true" aria-label="ASCII lookup table">
@@ -136,22 +135,32 @@
   </section>
 </div>
 
-<!-- Settings Sheet -->
+<!-- Settings Modal -->
 <div class="sheet-backdrop" id="sheetBackdrop"></div>
-<div class="sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true">
-  <div class="sheet-handle"></div>
-  <div class="sheet-head">
-    <h2 class="sheet-title">Settings</h2>
-    <button class="sheet-close" id="sheetClose" aria-label="Close settings">Done</button>
+<div class="modal" id="settingsSheet" role="dialog" aria-modal="true" aria-label="Settings" aria-hidden="true">
+  <div class="modal-head">
+    <h2 class="modal-title">Settings</h2>
+    <button class="modal-x" id="sheetClose" aria-label="Close settings">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>
-  <div class="sheet-body">
+  <div class="modal-body">
 
     <div class="setting">
       <div class="setting-label">Appearance</div>
       <div class="seg" data-setting="theme">
-        <button class="seg-btn" data-val="light">Light</button>
         <button class="seg-btn active" data-val="dark">Dark</button>
-        <button class="seg-btn" data-val="auto">Auto</button>
+        <button class="seg-btn" data-val="electric">Electric</button>
+      </div>
+    </div>
+
+    <div class="setting" id="accentSetting">
+      <div class="setting-label">Accent color</div>
+      <div class="seg" data-setting="accent">
+        <button class="seg-btn active" data-val="blue"><span class="accent-dot accent-dot-blue"></span>Default</button>
+        <button class="seg-btn" data-val="green"><span class="accent-dot accent-dot-green"></span>Neon</button>
       </div>
     </div>
 
@@ -189,6 +198,10 @@
       <button class="reset-btn" id="resetSettings">Reset to defaults</button>
     </div>
 
+  </div>
+  <div class="modal-foot">
+    <button class="modal-btn modal-btn-ghost" id="sheetCancel">Cancel</button>
+    <button class="modal-btn modal-btn-primary" id="sheetOk">OK</button>
   </div>
 </div>
 
